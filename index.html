@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>6학년 1반 마음 나눔 구름 ☁️</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            chalkboard: '#2b3a32',
+            cream: '#fffdf7',
+            school: {
+              yellow: '#fde047',
+              peach: '#fed7aa',
+              mint: '#bbf7d0',
+              sky: '#bae6fd',
+              pink: '#fbcfe8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: 아기자기한 서체 (Jua, Gaegu, Do Hyeon, Noto Sans KR) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gaegu:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- WordCloud2.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Jua', 'Noto Sans KR', sans-serif;
+      background-color: #fff9ee;
+      background-image: radial-gradient(#fed7aa 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+    .font-gaegu {
+      font-family: 'Gaegu', cursive;
+    }
+    .font-body {
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .cute-card {
+      background: white;
+      border: 3px solid #ffedd5;
+      box-shadow: 0 10px 0 #fed7aa;
+      transition: all 0.2s ease;
+    }
+    .cute-card-sm {
+      background: white;
+      border: 2.5px solid #ffedd5;
+      box-shadow: 0 5px 0 #fed7aa;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #fdba74;
+      border-radius: 9999px;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col selection:bg-amber-200">
+
+  <!-- 아기자기한 상단 헤더 -->
+  <header class="bg-white/95 backdrop-blur border-b-4 border-amber-200 sticky top-0 z-30 px-4 sm:px-8 py-3.5 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- 로고 및 반 안내 -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-amber-400 border-2 border-amber-500 shadow-[0_3px_0_#d97706] flex items-center justify-center text-white text-2xl animate-float shrink-0">
+          🎒
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-xl sm:text-2xl font-bold text-amber-900 tracking-tight flex items-center gap-1.5">
+              6학년 1반 마음 나눔 구름
+            </h1>
+            <span id="syncStatusBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold border border-amber-300 flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+              연결 준비 중
+            </span>
+          </div>
+          <p class="text-xs text-amber-700/80 font-gaegu text-base -mt-0.5">우리들의 꿈과 추억이 몽글몽글 피어나는 곳 🌱</p>
+        </div>
+      </div>
+
+      <!-- 우측 빠른 메뉴 버튼 모음 -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <button id="btnOpenAiReport" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-purple-900 bg-purple-100 hover:bg-purple-200 border-2 border-purple-300 rounded-2xl shadow-[0_2px_0_#9333ea] active:translate-y-0.5 transition-all">
+          <i data-lucide="sparkles" class="w-4 h-4 text-purple-600"></i>
+          <span class="hidden sm:inline">AI 우리반 마음 리포트</span>
+          <span class="sm:hidden">AI 리포트</span>
+        </button>
+
+        <button id="btnOpenSimulator" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 rounded-2xl shadow-[0_2px_0_#d97706] active:translate-y-0.5 transition-all">
+          <i data-lucide="smartphone" class="w-4 h-4 text-orange-600"></i>
+          <span class="hidden sm:inline">모바일 참여창 테스트</span>
+          <span class="sm:hidden">테스트</span>
+        </button>
+
+        <button id="btnDownloadHtml" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border-2 border-emerald-300 rounded-2xl shadow-[0_2px_0_#059669] active:translate-y-0.5 transition-all">
+          <i data-lucide="file-code" class="w-4 h-4 text-emerald-700"></i>
+          <span class="hidden sm:inline">웹앱 파일(HTML) 저장</span>
+          <span class="sm:hidden">HTML</span>
+        </button>
+
+        <button id="btnOpenAdmin" class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 rounded-2xl shadow-[0_2px_0_#94a3b8] active:translate-y-0.5 transition-all">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+          <span class="hidden sm:inline">관리자 모드</span>
+        </button>
+
+        <button id="btnOpenQrModal" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-bold text-amber-900 bg-school-yellow hover:bg-yellow-300 border-2 border-amber-500 rounded-2xl shadow-[0_3px_0_#d97706] active:translate-y-0.5 transition-all">
+          <i data-lucide="qr-code" class="w-4 h-4"></i>
+          <span>QR코드로 참여하기</span>
+        </button>
+
+        <button id="btnDownload" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 border-2 border-amber-600 rounded-2xl shadow-[0_3px_0_#b45309] active:translate-y-0.5 transition-all">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">구름 사진 저장</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- [참여자 전용 뷰] QR 코드를 찍고 들어왔을 때 오직 '응원 전송기'만 나타나는 화면 -->
+  <div id="participantOnlyView" class="hidden flex-1 max-w-xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+    <div class="cute-card rounded-3xl p-6 sm:p-8 relative overflow-hidden bg-white shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <span class="bg-amber-100 text-amber-800 border border-amber-300 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+          🏫 6학년 1반 전용
+        </span>
+        <button id="btnSwitchToCloudView" class="text-xs text-amber-700 hover:text-amber-900 underline font-gaegu text-lg">
+          ☁️ 전체 구름 구경가기
+        </button>
+      </div>
+
+      <div class="mb-5 text-center">
+        <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-bold mb-2">
+          <i data-lucide="heart" class="w-3.5 h-3.5 fill-rose-500 text-rose-500"></i>
+          따뜻한 마음 배달부
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-800 leading-snug">
+          6학년 1반 아이들에게 보내는<br class="hidden sm:inline"/> 격려의 말을 써 주세요.
+        </h2>
+        <p class="text-xs sm:text-sm text-amber-700 font-gaegu text-xl mt-1">
+          여러분의 한 줄 응원이 모여 칠판 위 구름으로 활짝 피어납니다! 🌱
+        </p>
+      </div>
+
+      <form id="participantCheerForm" class="space-y-4">
+        <div class="relative">
+          <textarea
+            id="participantMessageInput"
+            rows="4"
+            maxlength="30"
+            placeholder="30자 이내 설명: 30자 이내로 따뜻한 격려의 말을 남겨주세요! (예: 언제나 너희의 꿈을 응원해!)"
+            class="w-full text-base p-4 border-2 border-amber-300 rounded-2xl bg-amber-50/40 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-200/50 outline-none resize-none transition font-body leading-relaxed shadow-inner"
+          ></textarea>
+          
+          <div class="flex justify-between items-center px-1 mt-1 text-xs">
+            <span class="text-amber-800/80 font-gaegu text-lg flex items-center gap-1">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+              최대 30자까지 작성 가능해요
+            </span>
+            <span id="participantCharCount" class="font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
+              0 / 30자
+            </span>
+          </div>
+        </div>
+
+        <!-- AI 격려말 도우미 도구 바 -->
+        <div class="flex items-center justify-between gap-1.5 p-2 rounded-2xl bg-purple-50/70 border border-purple-200">
+          <div class="flex items-center gap-1 text-xs text-purple-800 font-bold">
+            <i data-lucide="bot" class="w-3.5 h-3.5 text-purple-600"></i>
+            <span>AI 도우미:</span>
+          </div>
+          <div class="flex items-center gap-1 flex-wrap">
+            <button type="button" id="btnPartAiPolish" class="px-2.5 py-1 text-xs font-bold bg-white text-purple-700 hover:bg-purple-100 border border-purple-300 rounded-xl transition flex items-center gap-1">
+              <i data-lucide="wand-2" class="w-3 h-3 text-purple-600"></i>
+              30자 다듬기
+            </button>
+            <button type="button" id="btnPartAiSuggest" class="px-2.5 py-1 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition flex items-center gap-1">
+              <i data-lucide="sparkles" class="w-3 h-3"></i>
+              문구 추천받기
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs px-1 text-amber-900 font-bold">
+            <span class="flex items-center gap-1">
+              <i data-lucide="smile" class="w-3.5 h-3.5 text-amber-600"></i>
+              이름 칸에는 자유로운 닉네임을 써 주세요! 😊
+            </span>
+            <span class="text-[11px] text-amber-700 font-normal">최대 10자</span>
+          </div>
+          <input
+            type="text"
+            id="participantSenderInput"
+            maxlength="10"
+            placeholder="닉네임 (예: 긍정토끼, 학부모님, 1반팬)"
+            class="w-full text-sm p-3 border-2 border-amber-200 rounded-xl bg-white focus:border-amber-500 focus:bg-amber-50/20 outline-none font-body shadow-inner transition"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-2xl text-lg shadow-[0_4px_0_#b45309] active:translate-y-1 transition flex items-center justify-center gap-2"
+        >
+          <i data-lucide="send" class="w-5 h-5"></i>
+          6학년 1반에 응원 보내기!
+        </button>
+      </form>
+
+      <div class="mt-5 pt-4 border-t border-amber-100">
+        <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1">
+          <span>💡 터치해서 바로 입력하기:</span>
+        </p>
+        <div class="flex flex-wrap gap-1.5" id="participantSampleChips"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- [전체 화면 (칠판/스크린용)] 워드클라우드와 작성기가 함께 있는 대시보드 화면 -->
+  <main id="mainScreenView" class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    
+    <!-- 좌측 패널: 격려의 말 작성 & 설정 -->
+    <section class="lg:col-span-5 flex flex-col gap-5">
+      
+      <!-- 6학년 1반 격려의 말 입력 카드 -->
+      <div class="cute-card rounded-3xl p-5 relative overflow-hidden">
+        <span class="absolute -top-1 -right-1 bg-school-pink border-2 border-rose-300 px-3 py-1 rounded-bl-2xl text-xs font-bold text-rose-800 shadow-sm">
+          🌟 응원 전송기
+        </span>
+
+        <div class="mb-3.5 pr-20">
+          <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-orange-100/90 text-orange-800 text-xs font-bold mb-1.5">
+            <i data-lucide="heart" class="w-3.5 h-3.5 fill-rose-500 text-rose-500"></i>
+            따뜻한 마음 배달부
+          </div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-800 leading-snug">
+            6학년 1반 아이들에게 보내는 격려의 말을 써 주세요.
+          </h2>
+          <p class="text-xs text-amber-700 font-gaegu text-lg mt-0.5">
+            아이들에게 힘이 되는 한마디가 모여 멋진 구름이 됩니다!
+          </p>
+        </div>
+
+        <form id="cheerForm" class="space-y-3">
+          <div class="relative">
+            <textarea
+              id="messageInput"
+              rows="3"
+              maxlength="30"
+              placeholder="30자 이내 설명: 30자 이내로 따뜻한 격려의 말을 남겨주세요! (예: 언제나 너희의 꿈을 응원해!)"
+              class="w-full text-base p-3.5 border-2 border-amber-300 rounded-2xl bg-amber-50/40 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-200/50 outline-none resize-none transition font-body leading-relaxed"
+            ></textarea>
+            
+            <div class="flex justify-between items-center px-1 mt-1 text-xs">
+              <span class="text-amber-800/80 font-gaegu text-base flex items-center gap-1">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+                최대 30자까지 작성 가능해요
+              </span>
+              <span id="charCount" class="font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
+                0 / 30자
+              </span>
+            </div>
+          </div>
+
+          <!-- 데스크톱용 AI 격려말 도우미 -->
+          <div class="flex items-center justify-between gap-1 p-2 rounded-2xl bg-purple-50/70 border border-purple-200">
+            <div class="flex items-center gap-1 text-xs text-purple-800 font-bold">
+              <i data-lucide="bot" class="w-3.5 h-3.5 text-purple-600"></i>
+              <span>AI 마음 작가:</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="btnAiPolish" class="px-2.5 py-1 text-xs font-bold bg-white text-purple-700 hover:bg-purple-100 border border-purple-300 rounded-xl transition flex items-center gap-1">
+                <i data-lucide="wand-2" class="w-3 h-3 text-purple-600"></i>
+                30자 다듬기
+              </button>
+              <button type="button" id="btnAiSuggest" class="px-2.5 py-1 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition flex items-center gap-1 shadow-sm">
+                <i data-lucide="sparkles" class="w-3 h-3"></i>
+                추천 문구
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs px-1 text-amber-900/90 font-bold">
+              <span class="flex items-center gap-1">
+                <i data-lucide="smile" class="w-3.5 h-3.5 text-amber-600"></i>
+                이름 칸에는 자유로운 닉네임을 써 주세요! 😊
+              </span>
+              <span class="text-[11px] text-amber-700 font-normal">최대 10자</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <input
+                type="text"
+                id="senderInput"
+                maxlength="10"
+                placeholder="닉네임 (예: 긍정토끼)"
+                title="닉네임을 적어주세요"
+                class="col-span-1 text-xs sm:text-sm p-2.5 border-2 border-amber-200 rounded-xl bg-white focus:border-amber-500 focus:bg-amber-50/20 outline-none font-body shadow-inner transition"
+              />
+              <button
+                type="submit"
+                class="col-span-2 py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-xl text-base shadow-[0_3px_0_#b45309] active:translate-y-0.5 transition flex items-center justify-center gap-2"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i>
+                응원 구름에 띄우기!
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="mt-4 pt-3 border-t border-amber-100">
+          <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1">
+            <span>💡 톡! 눌러서 바로 보내는 예시:</span>
+          </p>
+          <div class="flex flex-wrap gap-1.5" id="sampleChipBox"></div>
+        </div>
+      </div>
+
+      <!-- 구름 꾸미기 옵션 카드 -->
+      <div class="cute-card rounded-3xl p-4 space-y-3.5">
+        <div class="flex items-center justify-between border-b border-amber-100 pb-2">
+          <h3 class="text-sm font-bold text-amber-950 flex items-center gap-1.5">
+            <i data-lucide="palette" class="w-4 h-4 text-amber-600"></i>
+            구름 모양 & 색상 꾸미기
+          </h3>
+          <button id="btnResetCloud" class="text-xs text-amber-700 hover:text-rose-600 flex items-center gap-1">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            초기화
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">글씨체</label>
+            <select id="fontSelect" class="w-full text-xs p-2 border-2 border-amber-200 rounded-xl bg-amber-50/50 outline-none font-bold text-slate-700">
+              <option value="'Jua', sans-serif">주아체 (둥글둥글)</option>
+              <option value="'Do Hyeon', sans-serif">도현체 (선명하고 든든한)</option>
+              <option value="'Gaegu', cursive">개구체 (손글씨)</option>
+              <option value="'Noto Sans KR', sans-serif">깔끔 고딕체</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">모양</label>
+            <select id="shapeSelect" class="w-full text-xs p-2 border-2 border-amber-200 rounded-xl bg-amber-50/50 outline-none font-bold text-slate-700">
+              <option value="circle">몽글몽글 구름 (원형)</option>
+              <option value="cardioid">두근두근 하트형</option>
+              <option value="star">반짝이는 별 모양</option>
+              <option value="diamond">보석 다이아몬드</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1.5">색상 테마</label>
+          <div class="grid grid-cols-3 gap-2" id="paletteList"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <div>
+            <div class="flex justify-between text-xs font-bold text-slate-600 mb-1">
+              <span>글자 크기</span>
+              <span id="scaleVal" class="text-amber-600">1.1x</span>
+            </div>
+            <input id="scaleInput" type="range" min="0.6" max="1.8" step="0.1" value="1.1" class="w-full h-1.5 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-bold text-slate-600 mb-1">
+              <span>단어 회전</span>
+              <span id="rotateVal" class="text-amber-600">20%</span>
+            </div>
+            <input id="rotateInput" type="range" min="0" max="0.8" step="0.1" value="0.2" class="w-full h-1.5 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 우측 패널: 워드클라우드 캔버스 및 실시간 피드 -->
+    <section class="lg:col-span-7 flex flex-col gap-5">
+      
+      <!-- 워드클라우드 메인 디스플레이 -->
+      <div class="cute-card rounded-3xl p-5 flex flex-col min-h-[440px] relative">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
+            <h3 class="text-base font-bold text-amber-950 flex items-center gap-1.5">
+              ☁️ 6학년 1반 마음 단어 구름
+            </h3>
+            <span id="messageCounterBadge" class="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-300">
+              0개의 응원
+            </span>
+          </div>
+
+          <button id="btnRedraw" class="text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-xl border border-amber-300 transition flex items-center gap-1">
+            <i data-lucide="shuffle" class="w-3.5 h-3.5"></i>
+            구름 다시 섞기
+          </button>
+        </div>
+
+        <!-- 캔버스 컨테이너 -->
+        <div id="canvasBox" class="relative flex-1 rounded-2xl bg-white border-2 border-dashed border-amber-200 overflow-hidden flex items-center justify-center min-h-[380px]">
+          <canvas id="wordCloudCanvas" class="max-w-full block"></canvas>
+          
+          <div id="canvasTooltip" class="absolute hidden px-3 py-1.5 text-xs font-bold text-white bg-slate-900/90 rounded-xl shadow-xl pointer-events-none z-20">
+            <span id="tooltipWord" class="text-amber-300"></span> : <span id="tooltipCount"></span>번 언급됨
+          </div>
+
+          <div id="cloudLoading" class="absolute inset-0 bg-white/80 backdrop-blur-xs flex flex-col items-center justify-center gap-2 hidden z-10">
+            <div class="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-xs font-bold text-amber-800">새로운 응원 구름을 그리는 중... 🎨</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 최근 도착한 격려의 말 실시간 롤링 피드 -->
+      <div class="cute-card-sm rounded-3xl p-4 bg-white/90">
+        <div class="flex items-center justify-between mb-2.5">
+          <h4 class="text-xs sm:text-sm font-bold text-slate-700 flex items-center gap-1.5">
+            <i data-lucide="message-circle" class="w-4 h-4 text-orange-500"></i>
+            방금 도착한 격려의 말들
+          </h4>
+          <span class="text-[11px] text-amber-700/70 font-gaegu text-base">친구들에게 전달된 따뜻한 한 줄</span>
+        </div>
+
+        <div id="recentMessages" class="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- QR코드 참여 모달 -->
+  <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="cute-card bg-white rounded-3xl max-w-lg w-full p-6 text-center relative max-h-[95vh] overflow-y-auto">
+      <button id="btnCloseQrModal" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold mb-2 border border-emerald-300">
+        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
+        스마트폰 기본 카메라 스캔 지원
+      </div>
+
+      <h3 class="text-xl font-bold text-slate-800 mb-1">
+        스마트폰으로 격려의 말 참여하기
+      </h3>
+
+      <!-- 환경 감지 안내 배너 -->
+      <div id="sandboxAlertBox" class="text-left bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-3">
+        <div class="flex items-start gap-2.5">
+          <span class="text-2xl shrink-0">⚠️</span>
+          <div class="text-xs text-amber-950 leading-relaxed font-body">
+            <strong class="text-rose-700 font-bold text-sm block mb-1">스마트폰에서 "페이지를 열 수 없음" 오류가 나시나요?</strong>
+            현재 화면은 <strong>브라우저 편집기 내부 가상 미리보기(about:srcdoc)</strong>로 실행 중이기 때문에, 외부 스마트폰이 이 컴퓨터 속 임시 주소로 직접 찾아올 수 없습니다.
+          </div>
+        </div>
+        <div class="mt-3 pt-2.5 border-t border-amber-200 flex flex-col gap-2">
+          <div class="flex flex-wrap gap-2">
+            <button id="btnLaunchSimFromModal" type="button" class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow-[0_2px_0_#b45309] active:translate-y-0.5 transition flex items-center gap-1.5">
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+              지금 바로 화면 속 스마트폰으로 테스트하기
+            </button>
+            <button id="btnDownloadHtmlFromModal" type="button" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-[0_2px_0_#065f46] active:translate-y-0.5 transition flex items-center gap-1.5">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              이 파일(HTML) 다운로드하기
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-600 font-body">
+            💡 <strong>실제 참관 수업 시 사용 방법:</strong> 위 다운로드 버튼으로 <code>.html</code> 파일을 저장한 뒤, 학교 홈페이지·패들렛(Padlet)·무료 웹 호스팅(GitHub Pages 등)에 올리시고 생성된 인터넷 주소를 아래에 붙여넣으시면 즉시 스마트폰 카메라로 접속 가능한 정식 QR 코드가 만들어집니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- QR 코드 생성 박스 (삼성 카메라 최적화) -->
+      <div class="bg-white p-5 rounded-3xl border-4 border-amber-200 inline-block mx-auto mb-3 shadow-[0_6px_0_#fed7aa]">
+        <div id="qrCodeContainer" class="flex items-center justify-center bg-white p-2"></div>
+      </div>
+
+      <div class="space-y-2 mb-4 text-left font-body">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+          <span class="flex items-center gap-1">
+            <i data-lucide="link-2" class="w-3.5 h-3.5 text-amber-600"></i>
+            연결할 웹 주소 (URL):
+          </span>
+          <span class="text-[11px] text-amber-700">주소를 입력하면 QR 코드가 즉각 바뀝니다</span>
+        </div>
+        <div class="flex gap-1.5">
+          <input
+            type="url"
+            id="qrTargetUrlInput"
+            class="flex-1 text-xs p-2.5 border-2 border-amber-200 rounded-xl bg-slate-50 focus:bg-white focus:border-amber-500 outline-none font-mono text-slate-800 shadow-inner"
+            placeholder="실제 배포 주소 입력 (예: https://my-school.kr/cloud?mode=send)"
+          />
+          <button
+            type="button"
+            id="btnCopyQrUrl"
+            class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow-[0_2px_0_#b45309] active:translate-y-0.5 transition flex items-center gap-1 whitespace-nowrap"
+          >
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            주소 복사
+          </button>
+          <button
+            type="button"
+            id="btnDownloadQrImage"
+            class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl transition flex items-center gap-1 whitespace-nowrap"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            QR 저장
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 가상 스마트폰 시뮬레이터 모달 -->
+  <div id="simulatorModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="relative w-full max-w-sm bg-slate-800 rounded-[40px] p-4 shadow-2xl border-4 border-slate-700">
+      <div class="w-28 h-4 bg-slate-900 rounded-full mx-auto mb-3 flex items-center justify-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+        <span class="w-8 h-1.5 bg-slate-700 rounded-full"></span>
+      </div>
+
+      <button id="btnCloseSimulator" class="absolute top-4 right-4 p-1.5 bg-slate-700/80 hover:bg-slate-600 text-white rounded-full transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div class="bg-white rounded-[28px] overflow-hidden p-4 text-slate-800 min-h-[500px] flex flex-col justify-between border border-slate-200">
+        <div>
+          <div class="flex items-center justify-between text-[11px] text-slate-500 pb-2 border-b border-amber-100 mb-3">
+            <span class="font-bold text-amber-800">📱 6학년 1반 모바일 참여창</span>
+            <span class="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-bold">동기화 연결</span>
+          </div>
+
+          <div class="text-center mb-3">
+            <h4 class="text-base font-bold text-slate-800 leading-snug">
+              6학년 1반 아이들에게 보내는<br/>격려의 말을 써 주세요.
+            </h4>
+            <p class="text-xs text-amber-700 font-gaegu text-base mt-0.5">
+              30자 이내 따뜻한 마음을 보내주세요! 🌱
+            </p>
+          </div>
+
+          <form id="simCheerForm" class="space-y-2.5">
+            <div class="relative">
+              <textarea
+                id="simMessageInput"
+                rows="3"
+                maxlength="30"
+                placeholder="30자 이내 설명: 따뜻한 응원을 입력해보세요!"
+                class="w-full text-xs p-3 border-2 border-amber-300 rounded-xl bg-amber-50/40 focus:bg-white focus:border-amber-500 outline-none resize-none font-body shadow-inner"
+              ></textarea>
+              <div class="flex justify-between items-center px-1 text-[11px] mt-0.5">
+                <span class="text-amber-800/80 font-gaegu text-sm">최대 30자</span>
+                <span id="simCharCount" class="font-bold text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded">0 / 30자</span>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <span class="text-[11px] font-bold text-amber-900 block">이름 칸에는 자유로운 닉네임을 써 주세요! 😊</span>
+              <input
+                type="text"
+                id="simSenderInput"
+                maxlength="10"
+                placeholder="닉네임 (예: 응원대장, 학부모님)"
+                class="w-full text-xs p-2.5 border-2 border-amber-200 rounded-xl bg-white focus:border-amber-500 outline-none font-body shadow-inner"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 text-white font-bold rounded-xl text-sm shadow-[0_3px_0_#b45309] active:translate-y-0.5 transition flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="send" class="w-4 h-4"></i>
+              응원 구름에 전송하기
+            </button>
+          </form>
+
+          <div class="mt-3 pt-2.5 border-t border-amber-100">
+            <span class="text-[11px] font-bold text-slate-600 block mb-1.5">터치해서 바로 넣기:</span>
+            <div class="flex flex-col gap-1" id="simSampleList"></div>
+          </div>
+        </div>
+
+        <div class="w-24 h-1 bg-slate-300 rounded-full mx-auto mt-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 우리 반 마음 리포트 & 축복 편지 모달 -->
+  <div id="aiReportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="cute-card bg-white rounded-3xl max-w-2xl w-full p-6 relative max-h-[90vh] flex flex-col shadow-2xl">
+      <button id="btnCloseAiReport" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-11 h-11 rounded-2xl bg-purple-100 border-2 border-purple-300 flex items-center justify-center text-purple-700 text-xl font-bold shrink-0">
+          ✨
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            6학년 1반 AI 마음 리포트 & 축복 편지
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-300 font-bold">Gemini 3 Flash</span>
+          </h3>
+          <p class="text-xs text-slate-500 font-body">학부모님과 친구들이 남긴 소중한 말들을 AI가 분석하여 따뜻한 축복 시와 요약을 짓습니다.</p>
+        </div>
+      </div>
+
+      <div id="aiReportLoading" class="py-12 flex flex-col items-center justify-center gap-3 hidden">
+        <div class="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-sm font-bold text-purple-900">모아진 격려의 말들을 엮어 축복의 시를 짓는 중입니다... 📝✨</p>
+        <p class="text-xs text-slate-400 font-body">잠시만 기다려 주세요 (약 2~3초 소요)</p>
+      </div>
+
+      <div id="aiReportContent" class="flex-1 overflow-y-auto space-y-4 pr-1">
+        <!-- AI 분석 요약 카드 -->
+        <div class="bg-amber-50/70 border-2 border-amber-200 rounded-2xl p-4">
+          <h4 class="text-xs font-bold text-amber-900 flex items-center gap-1.5 mb-2">
+            <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
+            부모님과 친구들의 가장 큰 바람
+          </h4>
+          <div id="aiReportKeywords" class="flex flex-wrap gap-1.5 mb-2"></div>
+          <p id="aiReportSummary" class="text-xs sm:text-sm text-slate-700 font-body leading-relaxed"></p>
+        </div>
+
+        <!-- AI 축복 편지 / 시 카드 -->
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-4 sm:p-5 relative">
+          <span class="text-xs font-bold text-purple-700 bg-white px-2.5 py-0.5 rounded-full border border-purple-300 inline-flex items-center gap-1 mb-2">
+            🌱 6학년 1반에게 보내는 축복의 시
+          </span>
+          <div id="aiReportPoem" class="font-gaegu text-xl sm:text-2xl text-slate-800 whitespace-pre-line leading-relaxed pl-1"></div>
+        </div>
+
+        <!-- 담임 선생님 응원 가이드 -->
+        <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-3.5 text-xs font-body text-emerald-900 flex items-start gap-2.5">
+          <span class="text-xl shrink-0">💡</span>
+          <div class="leading-relaxed" id="aiReportMessageForClass"></div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between gap-2 flex-wrap">
+        <button id="btnRegenerateAiReport" class="px-3.5 py-2 text-xs font-bold text-purple-800 bg-purple-100 hover:bg-purple-200 border border-purple-300 rounded-xl transition flex items-center gap-1.5">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          리포트 다시 생성하기
+        </button>
+
+        <button id="btnCopyAiPoem" class="px-4 py-2 text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 rounded-xl shadow-[0_2px_0_#7e22ce] active:translate-y-0.5 transition flex items-center gap-1.5">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          축복의 시 복사하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 추천 문구 선택 팝업 모달 -->
+  <div id="aiSuggestionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="cute-card bg-white rounded-3xl max-w-md w-full p-5 relative max-h-[85vh] flex flex-col shadow-2xl">
+      <button id="btnCloseAiSuggest" class="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-2xl">🔮</span>
+        <div>
+          <h4 class="text-base font-bold text-slate-800">AI 추천 격려 문구</h4>
+          <p class="text-xs text-slate-500 font-body">원하는 주제를 골라 마음에 쏙 드는 문구를 채워보세요!</p>
+        </div>
+      </div>
+
+      <!-- 주제 탭 -->
+      <div class="flex gap-1.5 mb-3.5 overflow-x-auto pb-1" id="aiTopicTabs">
+        <button data-topic="꿈과자신감" class="ai-tab-btn active px-3 py-1 rounded-xl text-xs font-bold bg-purple-600 text-white transition">🌟 꿈과 자신감</button>
+        <button data-topic="우정과추억" class="ai-tab-btn px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 hover:bg-purple-100 text-slate-700 transition">🤝 우정과 추억</button>
+        <button data-topic="노력과성장" class="ai-tab-btn px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 hover:bg-purple-100 text-slate-700 transition">🌱 노력과 응원</button>
+      </div>
+
+      <div id="aiSuggestLoading" class="py-8 flex flex-col items-center justify-center gap-2 hidden">
+        <div class="w-7 h-7 border-3 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-xs font-bold text-purple-900">따뜻한 문구를 짓는 중...</p>
+      </div>
+
+      <div id="aiSuggestionsList" class="flex-1 overflow-y-auto space-y-2 pr-1 max-h-60"></div>
+    </div>
+  </div>
+
+  <!-- 관리자 모달 -->
+  <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="cute-card bg-white rounded-3xl max-w-xl w-full p-6 relative max-h-[90vh] flex flex-col shadow-2xl">
+      <button id="btnCloseAdminModal" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-800 font-bold">
+          🔑
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">6학년 1반 관리자 모드</h3>
+          <p class="text-xs text-slate-500 font-body">격려의 말 수정, 오타 정정 및 삭제 관리</p>
+        </div>
+      </div>
+
+      <div id="adminAuthBox" class="space-y-3 py-6 text-center">
+        <p class="text-xs text-slate-600 font-body">관리자 비밀번호를 입력해주세요. (기본: <strong>601</strong> 또는 <strong>1234</strong>)</p>
+        <div class="flex max-w-xs mx-auto gap-2">
+          <input
+            type="password"
+            id="adminPinInput"
+            maxlength="6"
+            placeholder="비밀번호"
+            class="flex-1 text-center font-mono font-bold text-base p-2.5 border-2 border-slate-300 rounded-xl outline-none focus:border-amber-500"
+          />
+          <button
+            type="button"
+            id="btnAdminLogin"
+            class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow-[0_2px_0_#b45309] active:translate-y-0.5 transition"
+          >
+            인증하기
+          </button>
+        </div>
+      </div>
+
+      <div id="adminListBox" class="hidden flex-1 flex flex-col min-h-0">
+        <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-200">
+          <span class="text-xs font-bold text-slate-700">
+            총 <span id="adminTotalCount" class="text-amber-600 font-bold">0</span>개의 메시지
+          </span>
+          <button id="btnAdminClearAll" type="button" class="px-2.5 py-1 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition">
+            전체 비우기
+          </button>
+        </div>
+
+        <div id="adminMessageList" class="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[220px] max-h-[380px]"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 알림창 -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none bg-amber-950 text-amber-100 text-sm font-bold px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 border border-amber-800">
+    <span id="toastIcon">✨</span>
+    <span id="toastMessage">알림 내용</span>
+  </div>
+
+  <!-- 자바스크립트 로직 모듈 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { 
+      getAuth, 
+      signInAnonymously, 
+      signInWithCustomToken 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      addDoc, 
+      updateDoc, 
+      deleteDoc, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'grade6-class1-cloud';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let isCloudReady = false;
+
+    // 팔레트 테마 정의
+    const PALETTES = [
+      { id: 'rainbow', name: '알록달록 무지개', colors: ['#f97316', '#e11d48', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b'] },
+      { id: 'candy', name: '달콤한 캔디', colors: ['#ec4899', '#f43f5e', '#a855f7', '#fb7185', '#fda4af'] },
+      { id: 'warm', name: '포근한 햇살', colors: ['#ea580c', '#d97706', '#ca8a04', '#b45309', '#f97316'] },
+      { id: 'forest', name: '새싹 그린', colors: ['#16a34a', '#059669', '#0d9488', '#65a30d', '#14b8a6'] },
+      { id: 'ocean', name: '푸른 꿈 바다', colors: ['#0284c7', '#2563eb', '#4f46e5', '#0891b2', '#38bdf8'] }
+    ];
+
+    // 추천 샘플 격려의 말
+    const SAMPLE_CHEERS = [
+      { text: "너희의 빛나는 꿈을 언제나 응원해!", sender: "학부모님" },
+      { text: "실패해도 괜찮아, 넌 최고야!", sender: "선생님" },
+      { text: "6학년 1반 모두 소중하고 자랑스러워!", sender: "응원요정" },
+      { text: "매일매일 행복한 추억 많이 만들자!", sender: "단짝친구" },
+      { text: "자신감을 갖고 멋지게 날아올라봐!", sender: "비타민" }
+    ];
+
+    // 한국어 불용어 및 조사 정의
+    const STOPWORDS = new Set([
+      '은', '는', '이', '가', '을', '를', '의', '에', '에서', '로', '으로', '와', '과', '도', '만',
+      '하고', '이나', '나', '며', '에게', '께', '한테', '까지', '부터', '조차', '마저',
+      '그리고', '하지만', '수', '것', '등', '잘', '더', '너희', '우리', '모두'
+    ]);
+
+    const PARTICLES = ['에게서', '에게', '에서', '으로', '까지', '부터', '처럼', '마저', '조차', '하고', '이나', '은', '는', '이', '가', '을', '를', '의', '에', '로', '와', '과', '도', '만'];
+
+    let cheerMessages = [];
+    let currentPalette = PALETTES[0];
+    let wordCloudData = [];
+    let isAdminUnlocked = false;
+
+    // DOM 캐싱
+    const cheerForm = document.getElementById('cheerForm');
+    const messageInput = document.getElementById('messageInput');
+    const charCount = document.getElementById('charCount');
+    const senderInput = document.getElementById('senderInput');
+    const sampleChipBox = document.getElementById('sampleChipBox');
+    const paletteList = document.getElementById('paletteList');
+    const fontSelect = document.getElementById('fontSelect');
+    const shapeSelect = document.getElementById('shapeSelect');
+    const scaleInput = document.getElementById('scaleInput');
+    const scaleVal = document.getElementById('scaleVal');
+    const rotateInput = document.getElementById('rotateInput');
+    const rotateVal = document.getElementById('rotateVal');
+    const wordCloudCanvas = document.getElementById('wordCloudCanvas');
+    const canvasBox = document.getElementById('canvasBox');
+    const canvasTooltip = document.getElementById('canvasTooltip');
+    const tooltipWord = document.getElementById('tooltipWord');
+    const tooltipCount = document.getElementById('tooltipCount');
+    const cloudLoading = document.getElementById('cloudLoading');
+    const recentMessages = document.getElementById('recentMessages');
+    const messageCounterBadge = document.getElementById('messageCounterBadge');
+    const btnRedraw = document.getElementById('btnRedraw');
+    const btnResetCloud = document.getElementById('btnResetCloud');
+    const btnDownload = document.getElementById('btnDownload');
+    const btnOpenQrModal = document.getElementById('btnOpenQrModal');
+    const btnCloseQrModal = document.getElementById('btnCloseQrModal');
+    const qrModal = document.getElementById('qrModal');
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+    const qrTargetUrlInput = document.getElementById('qrTargetUrlInput');
+    const btnCopyQrUrl = document.getElementById('btnCopyQrUrl');
+    const btnDownloadQrImage = document.getElementById('btnDownloadQrImage');
+    const btnOpenSimulator = document.getElementById('btnOpenSimulator');
+    const btnLaunchSimFromModal = document.getElementById('btnLaunchSimFromModal');
+    const btnDownloadHtml = document.getElementById('btnDownloadHtml');
+    const btnDownloadHtmlFromModal = document.getElementById('btnDownloadHtmlFromModal');
+    const btnOpenNewTabTest = document.getElementById('btnOpenNewTabTest');
+    const sandboxAlertBox = document.getElementById('sandboxAlertBox');
+    const simulatorModal = document.getElementById('simulatorModal');
+    const btnCloseSimulator = document.getElementById('btnCloseSimulator');
+    const simCheerForm = document.getElementById('simCheerForm');
+    const simMessageInput = document.getElementById('simMessageInput');
+    const simSenderInput = document.getElementById('simSenderInput');
+    const simCharCount = document.getElementById('simCharCount');
+    const simSampleList = document.getElementById('simSampleList');
+
+    const participantOnlyView = document.getElementById('participantOnlyView');
+    const mainScreenView = document.getElementById('mainScreenView');
+    const participantCheerForm = document.getElementById('participantCheerForm');
+    const participantMessageInput = document.getElementById('participantMessageInput');
+    const participantCharCount = document.getElementById('participantCharCount');
+    const participantSenderInput = document.getElementById('participantSenderInput');
+    const participantSampleChips = document.getElementById('participantSampleChips');
+    const btnSwitchToCloudView = document.getElementById('btnSwitchToCloudView');
+
+    const btnOpenAdmin = document.getElementById('btnOpenAdmin');
+    const adminModal = document.getElementById('adminModal');
+    const btnCloseAdminModal = document.getElementById('btnCloseAdminModal');
+    const adminAuthBox = document.getElementById('adminAuthBox');
+    const adminPinInput = document.getElementById('adminPinInput');
+    const btnAdminLogin = document.getElementById('btnAdminLogin');
+    const adminListBox = document.getElementById('adminListBox');
+    const adminTotalCount = document.getElementById('adminTotalCount');
+    const adminMessageList = document.getElementById('adminMessageList');
+    const btnAdminClearAll = document.getElementById('btnAdminClearAll');
+    const syncStatusBadge = document.getElementById('syncStatusBadge');
+
+    // AI 관련 DOM 요소
+    const btnOpenAiReport = document.getElementById('btnOpenAiReport');
+    const aiReportModal = document.getElementById('aiReportModal');
+    const btnCloseAiReport = document.getElementById('btnCloseAiReport');
+    const aiReportLoading = document.getElementById('aiReportLoading');
+    const aiReportContent = document.getElementById('aiReportContent');
+    const aiReportKeywords = document.getElementById('aiReportKeywords');
+    const aiReportSummary = document.getElementById('aiReportSummary');
+    const aiReportPoem = document.getElementById('aiReportPoem');
+    const aiReportMessageForClass = document.getElementById('aiReportMessageForClass');
+    const btnRegenerateAiReport = document.getElementById('btnRegenerateAiReport');
+    const btnCopyAiPoem = document.getElementById('btnCopyAiPoem');
+
+    const btnAiSuggest = document.getElementById('btnAiSuggest');
+    const btnPartAiSuggest = document.getElementById('btnPartAiSuggest');
+    const btnAiPolish = document.getElementById('btnAiPolish');
+    const btnPartAiPolish = document.getElementById('btnPartAiPolish');
+    const aiSuggestionModal = document.getElementById('aiSuggestionModal');
+    const btnCloseAiSuggest = document.getElementById('btnCloseAiSuggest');
+    const aiSuggestionsList = document.getElementById('aiSuggestionsList');
+    const aiSuggestLoading = document.getElementById('aiSuggestLoading');
+    const aiTopicTabs = document.getElementById('aiTopicTabs');
+
+    let activeAiTargetInput = messageInput;
+    let activeAiTargetCounter = charCount;
+    let currentAiTopic = '꿈과자신감';
+    let isAiBusy = false;
+
+    // Gemini API 호출 공통 헬퍼 (Exponential backoff 적용)
+    async function callGeminiApi(payload, maxRetries = 3) {
+      const apiKey = ""; // Canvas 환경에서 자동 주입
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+      let delay = 1000;
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+          }
+
+          const result = await response.json();
+          return result;
+        } catch (error) {
+          if (attempt === maxRetries - 1) throw error;
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    // 1. AI 30자 다듬기 기능
+    async function polishWithGemini(inputElement, counterElement) {
+      const rawText = inputElement.value.trim();
+      if (!rawText) {
+        showToast('먼저 다듬을 문장을 입력해주세요!', '✏️');
+        inputElement.focus();
+        return;
+      }
+
+      showToast('AI가 문구를 30자 이내로 예쁘게 다듬고 있어요... ✨', '🔮');
+      
+      const prompt = `초등학교 6학년 1반 아이들에게 학부모님이나 친구가 쓴 격려의 말입니다:
+"${rawText}"
+
+이 말을 초등학교 6학년 어린이의 마음에 깊이 닿도록 더욱 다정하고 따뜻하게 다듬어 주세요.
+반드시 공백 포함 30자 이내(Korean 30 characters maximum)여야 합니다.
+설명이나 큰따옴표 없이, 오직 다듬어진 한 문장만 그대로 반환하세요.`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        systemInstruction: {
+          parts: [{ text: "당신은 초등학교 학부모 참관 수업을 돕는 따뜻한 어린이 문학 작가입니다. 정확히 30자 이내의 감동적인 한국어 응원 문장을 작성합니다." }]
+        }
+      };
+
+      try {
+        const result = await callGeminiApi(payload);
+        let polished = result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+        polished = polished.replace(/^["'「\s]+|["'」\s]+$/g, '').slice(0, 30);
+
+        if (polished) {
+          inputElement.value = polished;
+          if (counterElement) {
+            const len = polished.length;
+            counterElement.textContent = `${len} / 30자`;
+          }
+          showToast('30자 응원 문구로 예쁘게 다듬어졌습니다! 💖', '✨');
+        }
+      } catch (err) {
+        console.error("AI polish failed:", err);
+        showToast('일시적인 연결 문제로 다듬기에 실패했습니다.', '⚠️');
+      }
+    }
+
+    // 2. AI 추천 문구 목록 생성 기능 (구조화된 응답 JSON)
+    async function fetchAiSuggestions(topic) {
+      if (isAiBusy) return;
+      isAiBusy = true;
+      aiSuggestLoading.classList.remove('hidden');
+      aiSuggestionsList.innerHTML = '';
+
+      const topicDescription = {
+        '꿈과자신감': '자신감과 큰 꿈을 응원하는 당차고 힘찬 격려',
+        '우정과추억': '6학년 친구들과의 소중한 우정과 평생 기억될 추억',
+        '노력과성장': '실패를 두려워하지 않고 한 걸음씩 나아가는 노력을 칭찬'
+      }[topic] || '따뜻한 사랑과 응원';
+
+      const prompt = `초등학교 6학년 1반 아이들에게 건넬 주제: "${topicDescription}".
+학부모님이나 친구가 교실 칠판 워드클라우드에 전송할 수 있는, 감동적이고 예쁜 한국어 격려 문구 4개를 작성해주세요.
+각 문구는 반드시 공백 포함 15자 이상 30자 이내여야 합니다.`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                "message": { "type": "STRING", "description": "30자 이내의 격려 문구" },
+                "defaultSender": { "type": "STRING", "description": "추천 닉네임 (예: 사랑하는엄마, 1반팬, 비타민 등)" }
+              },
+              required: ["message", "defaultSender"]
+            }
+          }
+        },
+        systemInstruction: {
+          parts: [{ text: "당신은 초등학생들을 진심으로 사랑하는 따뜻한 멘토입니다. 아이들에게 힘을 주는 문장을 간결하고 감성적으로 작성합니다." }]
+        }
+      };
+
+      try {
+        const result = await callGeminiApi(payload);
+        const jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(jsonText);
+
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          renderAiSuggestions(parsed);
+        } else {
+          fallbackSuggestions();
+        }
+      } catch (e) {
+        console.error("AI suggestion error:", e);
+        fallbackSuggestions();
+      } finally {
+        isAiBusy = false;
+        aiSuggestLoading.classList.add('hidden');
+      }
+    }
+
+    function fallbackSuggestions() {
+      const fallbackList = [
+        { message: "너의 모든 발걸음을 언제나 응원해!", defaultSender: "학부모님" },
+        { message: "넘어져도 괜찮아, 넌 언제나 최고야!", defaultSender: "선생님" },
+        { message: "빛나는 6학년 1반, 함께라서 고마워!", defaultSender: "친구" },
+        { message: "세상에서 가장 눈부신 너의 꿈을 믿어!", defaultSender: "응원단장" }
+      ];
+      renderAiSuggestions(fallbackList);
+    }
+
+    function renderAiSuggestions(list) {
+      aiSuggestionsList.innerHTML = list.map((item, idx) => `
+        <div class="bg-purple-50/60 border border-purple-200 hover:border-purple-400 p-3 rounded-2xl transition cursor-pointer flex items-center justify-between gap-2 group" data-idx="${idx}">
+          <div class="flex-1">
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-white text-purple-700 font-bold border border-purple-200">${escapeHtml(item.defaultSender)}</span>
+            <p class="text-xs sm:text-sm font-bold text-slate-800 mt-1 font-body">"${escapeHtml(item.message)}"</p>
+          </div>
+          <button type="button" class="px-2.5 py-1.5 text-xs font-bold bg-purple-600 group-hover:bg-purple-700 text-white rounded-xl shrink-0 transition">
+            선택
+          </button>
+        </div>
+      `).join('');
+
+      aiSuggestionsList.querySelectorAll('div[data-idx]').forEach(div => {
+        div.addEventListener('click', () => {
+          const idx = parseInt(div.dataset.idx, 10);
+          const selected = list[idx];
+          if (activeAiTargetInput && selected) {
+            activeAiTargetInput.value = selected.message.slice(0, 30);
+            if (activeAiTargetCounter) {
+              activeAiTargetCounter.textContent = `${activeAiTargetInput.value.length} / 30자`;
+            }
+            if (activeAiTargetInput === participantMessageInput && participantSenderInput && !participantSenderInput.value) {
+              participantSenderInput.value = selected.defaultSender;
+            } else if (activeAiTargetInput === messageInput && senderInput && !senderInput.value) {
+              senderInput.value = selected.defaultSender;
+            }
+            aiSuggestionModal.classList.add('hidden');
+            activeAiTargetInput.focus();
+            showToast('추천 문구가 입력창에 적용되었습니다! ✨', '🎉');
+          }
+        });
+      });
+    }
+
+    // 3. AI 우리 반 마음 리포트 & 축복 편지 생성
+    async function generateAiClassReport() {
+      aiReportModal.classList.remove('hidden');
+      aiReportLoading.classList.remove('hidden');
+      aiReportContent.classList.add('hidden');
+
+      const messagesText = cheerMessages.map(m => `[${m.sender}]: ${m.text}`).join('\n');
+      const topWords = wordCloudData.slice(0, 10).map(w => w[0]).join(', ');
+
+      const prompt = `초등학교 6학년 1반 학부모 참관 수업 및 교실에서 모인 격려의 말 데이터입니다.
+- 총 메시지 수: ${cheerMessages.length}개
+- 주요 빈출 단어들: ${topWords || '꿈, 응원, 최고, 행복, 함께'}
+- 수집된 메시지 목록:
+${messagesText.slice(0, 2000)}
+
+위 격려의 말들을 분석하여 학부모님과 아이들이 함께 감동할 수 있는 멋진 종합 리포트를 작성해주세요.
+반드시 아래 JSON 형식으로 반환하세요.`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              "keywords": {
+                "type": "ARRAY",
+                "items": { "type": "STRING" },
+                "description": "우리 반 격려의 말에서 추출한 대표 감성 키워드 4개"
+              },
+              "summary": {
+                "type": "STRING",
+                "description": "학부모님들과 친구들의 소중한 마음을 요약한 따뜻한 총평 (2~3문장)"
+              },
+              "blessingPoem": {
+                "type": "STRING",
+                "description": "6학년 1반 아이들에게 바치는 4~6줄의 아름다운 축복 동시"
+              },
+              "cheerTip": {
+                "type": "STRING",
+                "description": "선생님과 부모님이 교실에서 아이들에게 건넬 수 있는 한 줄 응원 조언"
+              }
+            },
+            required: ["keywords", "summary", "blessingPoem", "cheerTip"]
+          }
+        },
+        systemInstruction: {
+          parts: [{ text: "당신은 초등학교 교실의 따뜻하고 지혜로운 AI 교육 멘토입니다. 아이들과 학부모님께 깊은 울림과 격려를 선물합니다." }]
+        }
+      };
+
+      try {
+        const result = await callGeminiApi(payload);
+        const jsonStr = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const report = JSON.parse(jsonStr);
+
+        renderAiReport(report);
+      } catch (err) {
+        console.error("AI Report generation failed:", err);
+        renderAiReport({
+          keywords: ["빛나는 꿈", "소중한 우정", "따뜻한 용기", "너희의 걸음"],
+          summary: "학부모님들과 친구들의 응원 속에는 실패를 두려워하지 않고 언제나 당당하게 자신의 길을 걸어가길 바라는 사랑이 가득 담겨 있습니다.",
+          blessingPoem: "파란 하늘 위 뭉게구름처럼,\n우리의 꿈도 둥실 피어오르네.\n손을 잡고 함께 웃던 오늘의 마음들이\n내일의 너희를 환하게 비춰줄 거야.",
+          cheerTip: "오늘 남겨진 따뜻한 한마디들이 6학년 1반 아이들이 세상을 향해 날아오를 때 가장 든든한 날개가 되어줄 것입니다."
+        });
+      } finally {
+        aiReportLoading.classList.add('hidden');
+        aiReportContent.classList.remove('hidden');
+        lucide.createIcons();
+      }
+    }
+
+    function renderAiReport(data) {
+      if (aiReportKeywords) {
+        aiReportKeywords.innerHTML = (data.keywords || []).map(k => `
+          <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            #${escapeHtml(k)}
+          </span>
+        `).join('');
+      }
+
+      if (aiReportSummary) {
+        aiReportSummary.textContent = data.summary || '';
+      }
+
+      if (aiReportPoem) {
+        aiReportPoem.textContent = data.blessingPoem || '';
+      }
+
+      if (aiReportMessageForClass) {
+        aiReportMessageForClass.innerHTML = `<strong>교실 속 마음 가이드:</strong> ${escapeHtml(data.cheerTip || '')}`;
+      }
+    }
+
+    function getCleanParticipantUrl() {
+      try {
+        const currentHref = window.location.href;
+        const isSandbox = !currentHref.startsWith('http') || currentHref.includes('srcdoc') || window.location.hostname === '';
+        
+        if (isSandbox) {
+          // 샌드박스 환경에서는 안내용 주소 기본 제공
+          return "https://school-cheer-cloud.sample/?mode=send";
+        }
+
+        const url = new URL(currentHref);
+        url.searchParams.set('mode', 'send');
+        return url.toString();
+      } catch (e) {
+        return "https://school-cheer-cloud.sample/?mode=send";
+      }
+    }
+
+    function setupQrCode(overrideUrl) {
+      if (!qrCodeContainer) return;
+      qrCodeContainer.innerHTML = '';
+      
+      const currentHref = window.location.href;
+      const isSandbox = !currentHref.startsWith('http') || currentHref.includes('srcdoc') || window.location.hostname === '';
+      
+      let targetUrl = overrideUrl;
+      if (!targetUrl) {
+        if (qrTargetUrlInput && qrTargetUrlInput.value.trim()) {
+          targetUrl = qrTargetUrlInput.value.trim();
+        } else {
+          targetUrl = getCleanParticipantUrl();
+          if (qrTargetUrlInput) {
+            qrTargetUrlInput.value = targetUrl;
+          }
+        }
+      }
+
+      if (sandboxAlertBox) {
+        if (isSandbox) {
+          sandboxAlertBox.classList.remove('hidden');
+        } else {
+          sandboxAlertBox.classList.add('hidden');
+        }
+      }
+
+      try {
+        new QRCode(qrCodeContainer, {
+          text: targetUrl,
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.Q
+        });
+      } catch (err) {
+        console.warn('QR code generation deferred', err);
+      }
+    }
+
+    function downloadHtmlFile() {
+      try {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = '6학년1반_응원구름_웹앱.html';
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+        showToast('웹앱 HTML 파일이 다운로드되었습니다! 💾', '🎉');
+      } catch (e) {
+        showToast('HTML 다운로드 중 오류가 발생했습니다.', '❌');
+      }
+    }
+
+    function initSampleChips() {
+      if (!sampleChipBox) return;
+      sampleChipBox.innerHTML = SAMPLE_CHEERS.map((item, idx) => `
+        <button type="button" data-idx="${idx}" class="sample-chip text-[11px] px-2.5 py-1 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-body transition truncate max-w-full">
+          "${item.text}"
+        </button>
+      `).join('');
+
+      sampleChipBox.querySelectorAll('.sample-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.idx, 10);
+          const item = SAMPLE_CHEERS[idx];
+          if (messageInput) {
+            messageInput.value = item.text;
+            updateCharCount();
+            messageInput.focus();
+          }
+          if (senderInput && !senderInput.value.trim()) {
+            senderInput.value = item.sender;
+          }
+        });
+      });
+    }
+
+    function initParticipantSampleChips() {
+      if (!participantSampleChips) return;
+      participantSampleChips.innerHTML = SAMPLE_CHEERS.map((item, idx) => `
+        <button type="button" data-idx="${idx}" class="part-sample-chip text-xs px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-body transition">
+          "${item.text}"
+        </button>
+      `).join('');
+
+      participantSampleChips.querySelectorAll('.part-sample-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.idx, 10);
+          const item = SAMPLE_CHEERS[idx];
+          if (participantMessageInput) {
+            participantMessageInput.value = item.text;
+            updateParticipantCharCount();
+            participantMessageInput.focus();
+          }
+          if (participantSenderInput && !participantSenderInput.value.trim()) {
+            participantSenderInput.value = item.sender;
+          }
+        });
+      });
+    }
+
+    function initPaletteSelector() {
+      if (!paletteList) return;
+      paletteList.innerHTML = PALETTES.map(p => `
+        <button
+          type="button"
+          data-palette-id="${p.id}"
+          class="palette-btn flex flex-col items-center gap-1 p-1.5 rounded-xl border-2 transition ${currentPalette.id === p.id ? 'border-amber-500 bg-amber-50 shadow-sm' : 'border-slate-200 bg-white hover:border-amber-300'}"
+        >
+          <div class="flex w-full h-3 rounded overflow-hidden">
+            ${p.colors.slice(0, 5).map(c => `<span class="flex-1 h-full" style="background-color: ${c}"></span>`).join('')}
+          </div>
+          <span class="text-[10px] font-bold text-slate-700 truncate w-full text-center">${p.name}</span>
+        </button>
+      `).join('');
+
+      paletteList.querySelectorAll('.palette-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const palId = btn.dataset.paletteId;
+          const found = PALETTES.find(p => p.id === palId);
+          if (found) {
+            currentPalette = found;
+            initPaletteSelector();
+            renderWordCloud();
+          }
+        });
+      });
+    }
+
+    function checkViewMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isParticipantMode = urlParams.get('mode') === 'send' || window.location.hash === '#send';
+
+      if (isParticipantMode) {
+        showParticipantView();
+      } else {
+        showScreenView();
+      }
+    }
+
+    function showParticipantView() {
+      participantOnlyView.classList.remove('hidden');
+      mainScreenView.classList.add('hidden');
+      document.title = "6학년 1반 격려의 말 보내기 💌";
+      initParticipantSampleChips();
+    }
+
+    function showScreenView() {
+      participantOnlyView.classList.add('hidden');
+      mainScreenView.classList.remove('hidden');
+      document.title = "6학년 1반 응원 구름 ☁️";
+      setTimeout(renderWordCloud, 100);
+    }
+
+    async function setupCloudSync() {
+      try {
+        if (typeof __firebase_config === 'undefined') {
+          console.log('Using local fallback state');
+          loadDefaultMessages();
+          if (syncStatusBadge) {
+            syncStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> 실시간 응원 대기 중`;
+            syncStatusBadge.className = "text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 flex items-center gap-1";
+          }
+          return;
+        }
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        // Rule 3: Auth Before Queries
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          const cred = await signInWithCustomToken(auth, __initial_auth_token);
+          currentUser = cred.user;
+        } else {
+          const cred = await signInAnonymously(auth);
+          currentUser = cred.user;
+        }
+
+        if (!currentUser) return;
+        isCloudReady = true;
+
+        if (syncStatusBadge) {
+          syncStatusBadge.innerHTML = `
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping inline-block"></span>
+            학부모 참관 실시간 연동 완료
+          `;
+          syncStatusBadge.className = "text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 flex items-center gap-1";
+        }
+
+        // Rule 1: Strict Paths (/artifacts/{appId}/public/data/{collectionName})
+        // Rule 2: No Complex Queries
+        const cheersColRef = collection(db, 'artifacts', appId, 'public', 'data', 'cheers');
+
+        onSnapshot(cheersColRef, (snapshot) => {
+          const list = [];
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            list.push({
+              id: docSnap.id,
+              text: data.text || '',
+              sender: data.sender || '학부모님',
+              time: data.time || '',
+              timestamp: data.timestamp || 0
+            });
+          });
+
+          list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+          if (list.length === 0 && !localStorage.getItem('cloud_initialized_' + appId)) {
+            seedInitialCloudData();
+            return;
+          }
+
+          cheerMessages = list;
+          recalculateAndRender();
+          if (isAdminUnlocked) renderAdminList();
+        }, (err) => {
+          console.error("Cloud sync error:", err);
+          showToast('동기화 연결 대기 중입니다.', 'ℹ️');
+        });
+
+      } catch (e) {
+        console.error("Cloud initialization fallback:", e);
+        loadDefaultMessages();
+      }
+    }
+
+    function loadDefaultMessages() {
+      cheerMessages = [
+        { id: 'd1', text: "너희의 빛나는 꿈을 언제나 응원해!", sender: "담임선생님", time: "방금", timestamp: Date.now() - 4000 },
+        { id: 'd2', text: "실패를 두려워하지 말고 당당하게!", sender: "학부모 참관", time: "방금", timestamp: Date.now() - 3000 },
+        { id: 'd3', text: "6학년 1반 모두 소중하고 자랑스러워!", sender: "학부모회", time: "방금", timestamp: Date.now() - 2000 },
+        { id: 'd4', text: "언제나 웃음 가득한 하루 되길 바래!", sender: "응원요정", time: "방금", timestamp: Date.now() - 1000 },
+        { id: 'd5', text: "함께라서 더 빛나는 우리 반 파이팅!", sender: "반장", time: "방금", timestamp: Date.now() }
+      ];
+    }
+
+    async function seedInitialCloudData() {
+      if (!isCloudReady || !currentUser) return;
+      localStorage.setItem('cloud_initialized_' + appId, 'true');
+      const initialItems = [
+        { text: "너희의 빛나는 꿈을 언제나 응원해!", sender: "담임선생님" },
+        { text: "실패를 두려워하지 말고 당당하게!", sender: "학부모 참관" },
+        { text: "6학년 1반 모두 소중하고 자랑스러워!", sender: "학부모회" },
+        { text: "언제나 웃음 가득한 하루 되길 바래!", sender: "응원요정" },
+        { text: "함께라서 더 빛나는 우리 반 파이팅!", sender: "반장" }
+      ];
+
+      for (const item of initialItems) {
+        try {
+          await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'cheers'), {
+            text: item.text,
+            sender: item.sender,
+            timestamp: Date.now(),
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          });
+        } catch (e) {
+          console.warn("Initial seed skipped", e);
+        }
+      }
+    }
+
+    async function handleMessageSubmit(msgInputElem, senderInputElem, counterElem) {
+      const text = msgInputElem.value.trim();
+      const sender = senderInputElem.value.trim() || '학부모님';
+
+      if (!text) {
+        showToast('격려의 말을 먼저 입력해주세요!', '⚠️');
+        msgInputElem.focus();
+        return;
+      }
+
+      if (text.length > 30) {
+        showToast('30자 이내로 입력해주세요!', '⚠️');
+        return;
+      }
+
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const newEntry = {
+        text: text,
+        sender: sender,
+        timestamp: Date.now(),
+        time: timeStr
+      };
+
+      msgInputElem.value = '';
+      if (counterElem) {
+        counterElem.textContent = '0 / 30자';
+      }
+
+      // 축하 폭죽 효과
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+
+      showToast('6학년 1반에 응원이 실시간 전달되었습니다! 💌', '🎉');
+
+      if (isCloudReady && currentUser) {
+        try {
+          await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'cheers'), newEntry);
+        } catch (err) {
+          console.error("Cloud save failed, local append:", err);
+          cheerMessages.unshift({ ...newEntry, id: 'temp_' + Date.now() });
+          recalculateAndRender();
+        }
+      } else {
+        cheerMessages.unshift({ ...newEntry, id: 'local_' + Date.now() });
+        recalculateAndRender();
+      }
+
+      if (isAdminUnlocked) {
+        renderAdminList();
+      }
+    }
+
+    window.saveEditMessage = async function(index) {
+      const target = cheerMessages[index];
+      if (!target) return;
+
+      const newSender = document.getElementById(`edit-sender-${index}`).value.trim() || '학부모님';
+      const newText = document.getElementById(`edit-text-${index}`).value.trim();
+
+      if (!newText) {
+        showToast('내용을 입력해주세요.', '⚠️');
+        return;
+      }
+
+      if (isCloudReady && currentUser && target.id && !target.id.startsWith('temp_') && !target.id.startsWith('local_')) {
+        try {
+          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'cheers', target.id);
+          await updateDoc(docRef, {
+            sender: newSender,
+            text: newText
+          });
+          showToast('격려의 말을 수정했습니다.', '✏️');
+        } catch (e) {
+          console.error("Cloud update error:", e);
+          showToast('수정 중 오류가 발생했습니다.', '❌');
+        }
+      } else {
+        cheerMessages[index].sender = newSender;
+        cheerMessages[index].text = newText;
+        recalculateAndRender();
+        renderAdminList();
+        showToast('격려의 말을 수정했습니다.', '✏️');
+      }
+    };
+
+    window.deleteMessage = async function(index) {
+      const target = cheerMessages[index];
+      if (!target) return;
+
+      if (isCloudReady && currentUser && target.id && !target.id.startsWith('temp_') && !target.id.startsWith('local_')) {
+        try {
+          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'cheers', target.id);
+          await deleteDoc(docRef);
+          showToast(`메시지를 삭제했습니다.`, '🗑️');
+        } catch (e) {
+          console.error("Cloud delete error:", e);
+          showToast('삭제 중 오류가 발생했습니다.', '❌');
+        }
+      } else {
+        cheerMessages.splice(index, 1);
+        recalculateAndRender();
+        renderAdminList();
+        showToast(`메시지를 삭제했습니다.`, '🗑️');
+      }
+    };
+
+    window.startEditMessage = function(index) {
+      document.getElementById(`text-display-${index}`).classList.add('hidden');
+      document.getElementById(`actions-${index}`).classList.add('hidden');
+      document.getElementById(`edit-form-${index}`).classList.remove('hidden');
+    };
+
+    window.cancelEditMessage = function(index) {
+      document.getElementById(`text-display-${index}`).classList.remove('hidden');
+      document.getElementById(`actions-${index}`).classList.remove('hidden');
+      document.getElementById(`edit-form-${index}`).classList.add('hidden');
+    };
+
+    function bindEvents() {
+      messageInput.addEventListener('input', updateCharCount);
+      participantMessageInput.addEventListener('input', updateParticipantCharCount);
+
+      cheerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleMessageSubmit(messageInput, senderInput, charCount);
+      });
+
+      participantCheerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleMessageSubmit(participantMessageInput, participantSenderInput, participantCharCount);
+      });
+
+      btnSwitchToCloudView.addEventListener('click', () => {
+        showScreenView();
+      });
+
+      scaleInput.addEventListener('input', (e) => {
+        scaleVal.textContent = `${parseFloat(e.target.value).toFixed(1)}x`;
+        renderWordCloud();
+      });
+
+      rotateInput.addEventListener('input', (e) => {
+        rotateVal.textContent = `${Math.round(e.target.value * 100)}%`;
+        renderWordCloud();
+      });
+
+      fontSelect.addEventListener('change', renderWordCloud);
+      shapeSelect.addEventListener('change', renderWordCloud);
+      btnRedraw.addEventListener('click', renderWordCloud);
+
+      btnResetCloud.addEventListener('click', () => {
+        scaleInput.value = 1.1;
+        scaleVal.textContent = '1.1x';
+        rotateInput.value = 0.2;
+        rotateVal.textContent = '20%';
+        fontSelect.value = "'Jua', sans-serif";
+        shapeSelect.value = "circle";
+        currentPalette = PALETTES[0];
+        initPaletteSelector();
+        renderWordCloud();
+        showToast('설정을 초기화했습니다.');
+      });
+
+      btnOpenQrModal.addEventListener('click', () => {
+        qrModal.classList.remove('hidden');
+        setupQrCode();
+      });
+      btnCloseQrModal.addEventListener('click', () => {
+        qrModal.classList.add('hidden');
+      });
+      qrModal.addEventListener('click', (e) => {
+        if (e.target === qrModal) qrModal.classList.add('hidden');
+      });
+
+      if (qrTargetUrlInput) {
+        qrTargetUrlInput.addEventListener('input', (e) => {
+          setupQrCode(e.target.value);
+        });
+      }
+
+      if (btnCopyQrUrl) {
+        btnCopyQrUrl.addEventListener('click', () => {
+          const urlToCopy = qrTargetUrlInput ? qrTargetUrlInput.value : getCleanParticipantUrl();
+          const tempInput = document.createElement('input');
+          tempInput.value = urlToCopy;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          try {
+            document.execCommand('copy');
+            showToast('참여 링크가 복사되었습니다! 📋', '✨');
+          } catch (err) {
+            showToast('주소를 직접 복사해주세요.', '⚠️');
+          }
+          document.body.removeChild(tempInput);
+        });
+      }
+
+      if (btnDownloadQrImage) {
+        btnDownloadQrImage.addEventListener('click', () => {
+          const qrCanvas = qrCodeContainer.querySelector('canvas');
+          const qrImg = qrCodeContainer.querySelector('img');
+          let dataUrl = null;
+
+          if (qrCanvas) {
+            dataUrl = qrCanvas.toDataURL('image/png');
+          } else if (qrImg && qrImg.src) {
+            dataUrl = qrImg.src;
+          }
+
+          if (dataUrl) {
+            const link = document.createElement('a');
+            link.download = '6학년1반_응원참여_QR코드.png';
+            link.href = dataUrl;
+            link.click();
+            showToast('인쇄용 QR 이미지를 저장했습니다! 🖨️', '🎉');
+          } else {
+            showToast('QR 코드를 준비 중입니다.', '⚠️');
+          }
+        });
+      }
+
+      btnOpenAdmin.addEventListener('click', openAdminPanel);
+      btnCloseAdminModal.addEventListener('click', closeAdminPanel);
+      adminModal.addEventListener('click', (e) => {
+        if (e.target === adminModal) closeAdminPanel();
+      });
+
+      btnAdminLogin.addEventListener('click', verifyAdminPin);
+      adminPinInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') verifyAdminPin();
+      });
+
+      btnAdminClearAll.addEventListener('click', async () => {
+        if (cheerMessages.length === 0) {
+          showToast('비울 메시지가 없습니다.', 'ℹ️');
+          return;
+        }
+
+        if (isCloudReady && currentUser) {
+          try {
+            const toDelete = [...cheerMessages];
+            for (const item of toDelete) {
+              if (item.id) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cheers', item.id));
+              }
+            }
+            showToast('모든 응원 메시지를 정리했습니다.', '🧹');
+          } catch (e) {
+            console.error("Clear all failed:", e);
+            showToast('일괄 삭제 중 오류가 발생했습니다.', '❌');
+          }
+        } else {
+          cheerMessages = [];
+          renderAdminList();
+          recalculateAndRender();
+          showToast('모든 격려의 말을 비웠습니다.', '🧹');
+        }
+      });
+
+      btnDownload.addEventListener('click', downloadCloudImage);
+      if (btnDownloadHtml) btnDownloadHtml.addEventListener('click', downloadHtmlFile);
+      if (btnDownloadHtmlFromModal) btnDownloadHtmlFromModal.addEventListener('click', downloadHtmlFile);
+      window.addEventListener('resize', debounce(renderWordCloud, 300));
+
+      // AI 관련 이벤트 리스너 바인딩
+      if (btnOpenAiReport) btnOpenAiReport.addEventListener('click', generateAiClassReport);
+      if (btnCloseAiReport) btnCloseAiReport.addEventListener('click', () => aiReportModal.classList.add('hidden'));
+      if (btnRegenerateAiReport) btnRegenerateAiReport.addEventListener('click', generateAiClassReport);
+      if (aiReportModal) {
+        aiReportModal.addEventListener('click', (e) => {
+          if (e.target === aiReportModal) aiReportModal.classList.add('hidden');
+        });
+      }
+
+      if (btnCopyAiPoem) {
+        btnCopyAiPoem.addEventListener('click', () => {
+          const poemText = aiReportPoem ? aiReportPoem.textContent : '';
+          if (!poemText) return;
+          const temp = document.createElement('textarea');
+          temp.value = poemText;
+          document.body.appendChild(temp);
+          temp.select();
+          try {
+            document.execCommand('copy');
+            showToast('축복의 시가 복사되었습니다! 💌', '🎉');
+          } catch (e) {
+            showToast('복사에 실패했습니다.', '⚠️');
+          }
+          document.body.removeChild(temp);
+        });
+      }
+
+      if (btnAiPolish) {
+        btnAiPolish.addEventListener('click', () => polishWithGemini(messageInput, charCount));
+      }
+      if (btnPartAiPolish) {
+        btnPartAiPolish.addEventListener('click', () => polishWithGemini(participantMessageInput, participantCharCount));
+      }
+
+      const openAiSuggestModal = (inputElem, counterElem) => {
+        activeAiTargetInput = inputElem;
+        activeAiTargetCounter = counterElem;
+        aiSuggestionModal.classList.remove('hidden');
+        fetchAiSuggestions(currentAiTopic);
+      };
+
+      if (btnAiSuggest) {
+        btnAiSuggest.addEventListener('click', () => openAiSuggestModal(messageInput, charCount));
+      }
+      if (btnPartAiSuggest) {
+        btnPartAiSuggest.addEventListener('click', () => openAiSuggestModal(participantMessageInput, participantCharCount));
+      }
+      if (btnCloseAiSuggest) {
+        btnCloseAiSuggest.addEventListener('click', () => aiSuggestionModal.classList.add('hidden'));
+      }
+      if (aiSuggestionModal) {
+        aiSuggestionModal.addEventListener('click', (e) => {
+          if (e.target === aiSuggestionModal) aiSuggestionModal.classList.add('hidden');
+        });
+      }
+
+      if (aiTopicTabs) {
+        aiTopicTabs.querySelectorAll('.ai-tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            aiTopicTabs.querySelectorAll('.ai-tab-btn').forEach(b => {
+              b.classList.remove('active', 'bg-purple-600', 'text-white');
+              b.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            btn.classList.add('active', 'bg-purple-600', 'text-white');
+            btn.classList.remove('bg-slate-100', 'text-slate-700');
+
+            currentAiTopic = btn.dataset.topic;
+            fetchAiSuggestions(currentAiTopic);
+          });
+        });
+      }
+
+      if (btnOpenSimulator) btnOpenSimulator.addEventListener('click', openSimulator);
+      if (btnLaunchSimFromModal) {
+        btnLaunchSimFromModal.addEventListener('click', () => {
+          qrModal.classList.add('hidden');
+          openSimulator();
+        });
+      }
+      if (btnCloseSimulator) btnCloseSimulator.addEventListener('click', closeSimulator);
+      if (simulatorModal) {
+        simulatorModal.addEventListener('click', (e) => {
+          if (e.target === simulatorModal) closeSimulator();
+        });
+      }
+
+      if (simMessageInput) {
+        simMessageInput.addEventListener('input', () => {
+          const len = simMessageInput.value.length;
+          simCharCount.textContent = `${len} / 30자`;
+          if (len > 30) {
+            simCharCount.classList.add('text-rose-600', 'bg-rose-100');
+            simCharCount.classList.remove('text-amber-600', 'bg-amber-100');
+          } else {
+            simCharCount.classList.remove('text-rose-600', 'bg-rose-100');
+            simCharCount.classList.add('text-amber-600', 'bg-amber-100');
+          }
+        });
+      }
+
+      if (simCheerForm) {
+        simCheerForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          handleMessageSubmit(simMessageInput, simSenderInput, simCharCount);
+          closeSimulator();
+          showToast('모바일 참여창에서 응원이 전송되었습니다! 📱☁️', '🎉');
+        });
+      }
+
+      if (btnOpenNewTabTest) {
+        btnOpenNewTabTest.addEventListener('click', () => {
+          const targetUrl = qrTargetUrlInput ? qrTargetUrlInput.value : getCleanParticipantUrl();
+          try {
+            window.open(targetUrl, '_blank');
+          } catch (e) {
+            showToast('새 창을 열 수 없습니다. 시뮬레이터를 이용해주세요.', '⚠️');
+          }
+        });
+      }
+    }
+
+    function openSimulator() {
+      if (!simulatorModal) return;
+      simulatorModal.classList.remove('hidden');
+      simMessageInput.value = '';
+      simSenderInput.value = '';
+      simCharCount.textContent = '0 / 30자';
+
+      if (simSampleList) {
+        simSampleList.innerHTML = SAMPLE_CHEERS.slice(0, 3).map(item => `
+          <button type="button" class="text-left text-[11px] p-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 truncate font-body">
+            "${item.text}"
+          </button>
+        `).join('');
+
+        simSampleList.querySelectorAll('button').forEach((btn, idx) => {
+          btn.addEventListener('click', () => {
+            const item = SAMPLE_CHEERS[idx];
+            simMessageInput.value = item.text;
+            simSenderInput.value = item.sender;
+            simCharCount.textContent = `${item.text.length} / 30자`;
+            simMessageInput.focus();
+          });
+        });
+      }
+      setTimeout(() => simMessageInput.focus(), 150);
+    }
+
+    function closeSimulator() {
+      if (simulatorModal) simulatorModal.classList.add('hidden');
+    }
+
+    function updateCharCount() {
+      const len = messageInput.value.length;
+      charCount.textContent = `${len} / 30자`;
+      if (len > 30) {
+        charCount.classList.add('text-rose-600', 'bg-rose-100');
+        charCount.classList.remove('text-amber-600', 'bg-amber-100');
+      } else {
+        charCount.classList.remove('text-rose-600', 'bg-rose-100');
+        charCount.classList.add('text-amber-600', 'bg-amber-100');
+      }
+    }
+
+    function updateParticipantCharCount() {
+      const len = participantMessageInput.value.length;
+      participantCharCount.textContent = `${len} / 30자`;
+      if (len > 30) {
+        participantCharCount.classList.add('text-rose-600', 'bg-rose-100');
+        participantCharCount.classList.remove('text-amber-600', 'bg-amber-100');
+      } else {
+        participantCharCount.classList.remove('text-rose-600', 'bg-rose-100');
+        participantCharCount.classList.add('text-amber-600', 'bg-amber-100');
+      }
+    }
+
+    function openAdminPanel() {
+      adminModal.classList.remove('hidden');
+      if (isAdminUnlocked) {
+        adminAuthBox.classList.add('hidden');
+        adminListBox.classList.remove('hidden');
+        renderAdminList();
+      } else {
+        adminAuthBox.classList.remove('hidden');
+        adminListBox.classList.add('hidden');
+        adminPinInput.value = '';
+        setTimeout(() => adminPinInput.focus(), 100);
+      }
+    }
+
+    function closeAdminPanel() {
+      adminModal.classList.add('hidden');
+    }
+
+    function verifyAdminPin() {
+      const pin = adminPinInput.value.trim();
+      if (pin === '601' || pin === '1234') {
+        isAdminUnlocked = true;
+        adminAuthBox.classList.add('hidden');
+        adminListBox.classList.remove('hidden');
+        renderAdminList();
+        showToast('관리자로 인증되었습니다. 🔑', '✨');
+      } else {
+        showToast('비밀번호가 올바르지 않습니다. (기본: 601)', '❌');
+      }
+    }
+
+    function renderAdminList() {
+      adminTotalCount.textContent = cheerMessages.length;
+
+      if (cheerMessages.length === 0) {
+        adminMessageList.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">등록된 격려의 말이 없습니다.</div>`;
+        return;
+      }
+
+      adminMessageList.innerHTML = cheerMessages.map((msg, index) => {
+        const msgId = msg.id || ('msg_' + index);
+        msg.id = msgId;
+        return `
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs font-body hover:bg-amber-50/40 transition" id="admin-item-${index}">
+            <div class="flex-1 w-full space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 font-bold text-[11px]">${escapeHtml(msg.sender || '학부모님')}</span>
+                <span class="text-slate-400 text-[11px]">${msg.time || ''}</span>
+              </div>
+              <p class="font-bold text-slate-800 text-sm leading-relaxed" id="text-display-${index}">${escapeHtml(msg.text)}</p>
+              
+              <div id="edit-form-${index}" class="hidden space-y-2 pt-1.5">
+                <input
+                  type="text"
+                  id="edit-sender-${index}"
+                  value="${escapeHtml(msg.sender || '')}"
+                  maxlength="10"
+                  class="w-full text-xs p-1.5 border border-amber-300 rounded-lg bg-white"
+                  placeholder="닉네임"
+                />
+                <textarea
+                  id="edit-text-${index}"
+                  rows="2"
+                  maxlength="30"
+                  class="w-full text-xs p-2 border border-amber-300 rounded-lg bg-white resize-none"
+                  placeholder="30자 이내 격려 문구"
+                >${escapeHtml(msg.text)}</textarea>
+                <div class="flex gap-1.5">
+                  <button onclick="saveEditMessage(${index})" class="px-2.5 py-1 bg-amber-500 text-white rounded-md font-bold text-[11px] hover:bg-amber-600">저장</button>
+                  <button onclick="cancelEditMessage(${index})" class="px-2.5 py-1 bg-slate-200 text-slate-700 rounded-md font-bold text-[11px] hover:bg-slate-300">취소</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0" id="actions-${index}">
+              <button onclick="startEditMessage(${index})" class="px-2.5 py-1.5 bg-white border border-slate-300 text-slate-700 hover:text-amber-700 hover:border-amber-400 rounded-xl font-bold transition flex items-center gap-1">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                수정
+              </button>
+              <button onclick="deleteMessage(${index})" class="px-2.5 py-1.5 bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl font-bold transition flex items-center gap-1">
+                <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                삭제
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function recalculateAndRender() {
+      updateRecentMessageFeed();
+
+      const allText = cheerMessages.map(m => m.text).join(' ');
+      const cleanText = allText.replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g, ' ');
+      const rawTokens = cleanText.split(/\s+/).filter(Boolean);
+
+      const freqMap = new Map();
+
+      rawTokens.forEach(token => {
+        let word = token.trim();
+        if (!word) return;
+
+        // 한국어 조사 분리 제거
+        for (const p of PARTICLES) {
+          if (word.length > p.length + 1 && word.endsWith(p)) {
+            word = word.slice(0, -p.length);
+            break;
+          }
+        }
+
+        const lower = word.toLowerCase();
+        if (lower.length >= 2 && !STOPWORDS.has(lower)) {
+          freqMap.set(lower, (freqMap.get(lower) || 0) + 1);
+        }
+      });
+
+      wordCloudData = Array.from(freqMap.entries())
+        .sort((a, b) => b[1] - a[1]);
+
+      messageCounterBadge.textContent = `${cheerMessages.length}개의 응원`;
+      renderWordCloud();
+    }
+
+    function updateRecentMessageFeed() {
+      if (cheerMessages.length === 0) {
+        recentMessages.innerHTML = `<p class="text-xs text-slate-400 py-3 text-center">아직 등록된 격려의 말이 없어요. 첫 번째 응원을 남겨보세요!</p>`;
+        return;
+      }
+
+      recentMessages.innerHTML = cheerMessages.slice(0, 8).map(msg => `
+        <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs font-body hover:bg-amber-100/60 transition">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+            <span class="font-bold text-slate-800 truncate">${escapeHtml(msg.text)}</span>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0 ml-2">
+            <span class="px-2 py-0.5 rounded-full bg-white text-[10px] font-bold text-amber-800 border border-amber-200">${escapeHtml(msg.sender)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderWordCloud() {
+      if (wordCloudData.length === 0) {
+        const ctx = wordCloudCanvas.getContext('2d');
+        ctx.clearRect(0, 0, wordCloudCanvas.width, wordCloudCanvas.height);
+        return;
+      }
+
+      cloudLoading.classList.remove('hidden');
+
+      const rect = canvasBox.getBoundingClientRect();
+      const width = Math.max(rect.width - 24, 320);
+      const height = Math.max(rect.height - 24, 340);
+
+      wordCloudCanvas.width = width;
+      wordCloudCanvas.height = height;
+
+      const factor = parseFloat(scaleInput.value);
+      const font = fontSelect.value;
+      const shape = shapeSelect.value;
+      const rotateRatio = parseFloat(rotateInput.value);
+      const colors = currentPalette.colors;
+
+      const maxFreq = wordCloudData[0][1];
+      const minFreq = wordCloudData[wordCloudData.length - 1][1];
+      const freqRange = Math.max(maxFreq - minFreq, 1);
+
+      const baseSize = Math.min(width, height) / 9;
+      const processedList = wordCloudData.slice(0, 60).map(([word, freq]) => {
+        const normalized = (freq - minFreq) / freqRange;
+        const size = Math.round((16 + normalized * (baseSize - 16)) * factor);
+        return [word, size];
+      });
+
+      try {
+        WordCloud(wordCloudCanvas, {
+          list: processedList,
+          fontFamily: font,
+          fontWeight: 'bold',
+          color: () => colors[Math.floor(Math.random() * colors.length)],
+          backgroundColor: '#ffffff',
+          rotateRatio: rotateRatio,
+          rotationSteps: 2,
+          minRotation: -Math.PI / 4,
+          maxRotation: Math.PI / 4,
+          shape: shape,
+          gridSize: Math.round(14 * width / 1024),
+          drawOutOfBound: false,
+          shrinkToFit: true,
+          hover: function(item, dimension, event) {
+            if (!item) {
+              canvasTooltip.classList.add('hidden');
+              wordCloudCanvas.style.cursor = 'default';
+              return;
+            }
+            wordCloudCanvas.style.cursor = 'pointer';
+            const word = item[0];
+            const original = wordCloudData.find(w => w[0] === word);
+
+            tooltipWord.textContent = word;
+            tooltipCount.textContent = original ? original[1] : item[1];
+            canvasTooltip.classList.remove('hidden');
+
+            const boxRect = canvasBox.getBoundingClientRect();
+            const posX = event.clientX - boxRect.left + 10;
+            const posY = event.clientY - boxRect.top + 10;
+            canvasTooltip.style.left = `${posX}px`;
+            canvasTooltip.style.top = `${posY}px`;
+          },
+          click: function(item) {
+            if (item) {
+              showToast(`"${item[0]}" 단어가 응원 구름에 반짝이고 있어요! ✨`, '💖');
+            }
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setTimeout(() => {
+          cloudLoading.classList.add('hidden');
+        }, 250);
+      }
+    }
+
+    function downloadCloudImage() {
+      if (!wordCloudCanvas || wordCloudData.length === 0) {
+        showToast('저장할 워드클라우드가 아직 없어요!', '⚠️');
+        return;
+      }
+
+      try {
+        const link = document.createElement('a');
+        link.download = `6학년1반_응원구름_${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = wordCloudCanvas.toDataURL('image/png');
+        link.click();
+        showToast('6학년 1반 응원 구름 사진을 저장했어요! 📸', '🎉');
+      } catch (e) {
+        showToast('이미지 저장 중 오류가 발생했습니다.', '❌');
+      }
+    }
+
+    function showToast(msg, icon = '✨') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMessage.textContent = msg;
+      toastIcon.textContent = icon;
+
+      toast.classList.remove('opacity-0', 'translate-y-16');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-16');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2500);
+    }
+
+    function debounce(fn, wait) {
+      let t;
+      return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+
+    async function init() {
+      lucide.createIcons();
+      checkViewMode();
+      initSampleChips();
+      initPaletteSelector();
+      setupQrCode();
+      bindEvents();
+
+      await setupCloudSync();
+      recalculateAndRender();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
